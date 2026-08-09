@@ -1,7 +1,7 @@
 function Navbar() {
   return (
-    <nav className="w-full border-b border-white/10 bg-black/80 px-8 py-5">
-      <div className="mx-auto flex max-w-7xl items-center justify-between">
+    <nav className="border-b border-white/10 bg-black">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
         
         {/* Logo */}
         <div className="text-2xl font-bold text-white">
@@ -10,15 +10,24 @@ function Navbar() {
 
         {/* Navigation Links */}
         <div className="hidden items-center gap-8 md:flex">
-          <a href="#" className="text-gray-300 hover:text-white">
+          <a
+            href="#home"
+            className="text-gray-300 transition hover:text-white"
+          >
             Home
           </a>
 
-          <a href="#" className="text-gray-300 hover:text-white">
+          <a
+            href="#features"
+            className="text-gray-300 transition hover:text-white"
+          >
             Features
           </a>
 
-          <a href="#" className="text-gray-300 hover:text-white">
+          <a
+            href="#how-it-works"
+            className="text-gray-300 transition hover:text-white"
+          >
             How It Works
           </a>
         </div>
