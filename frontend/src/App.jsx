@@ -10,6 +10,8 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+import Dashboard from "./pages/Dashboard";
+
 function LandingPage() {
   return (
     <div className="min-h-screen bg-black text-white">
@@ -37,6 +39,8 @@ function App() {
         {/* Register */}
         <Route path="/register" element={<Register />} />
 
+        <Route path="/dashboard" element={<Dashboard />} />
+        
       </Routes>
     </BrowserRouter>
   );
