@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -37,11 +40,14 @@ function Login() {
 
       const data = JSON.parse(text);
 
+      // Save logged-in user
       localStorage.setItem("user", JSON.stringify(data));
 
-      setMessage("Login successful! 🎉");
-
       console.log("Logged in user:", data);
+
+      // Redirect to Dashboard
+      navigate("/dashboard");
+
     } catch (error) {
       console.error("Login error:", error);
       setMessage("Unable to connect to server.");
@@ -103,7 +109,6 @@ function Login() {
           {/* Product Preview */}
           <div className="relative mt-10 max-w-md overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-5">
 
-            {/* Top */}
             <div className="flex items-center justify-between">
 
               <div>

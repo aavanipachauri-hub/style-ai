@@ -1,204 +1,131 @@
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const [activeMenu, setActiveMenu] = useState("Dashboard");
-  const [mobileMenu, setMobileMenu] = useState(false);
+  const navigate = useNavigate();
 
-  const menuItems = [
-    { name: "Dashboard", icon: "⌂" },
-    { name: "AI Stylist", icon: "✦" },
-    { name: "My Style", icon: "♡" },
-    { name: "Recommendations", icon: "✧" },
-  ];
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
 
   return (
-    <div className="h-screen overflow-hidden bg-black text-white">
-
-      {/* ================= MOBILE SIDEBAR OVERLAY ================= */}
-
-      {mobileMenu && (
-        <div
-          className="fixed inset-0 z-40 bg-black/70 lg:hidden"
-          onClick={() => setMobileMenu(false)}
-        />
-      )}
+    <div className="flex min-h-screen bg-[#08090d] text-white">
 
       {/* ================= SIDEBAR ================= */}
-
-      <aside
-        className={`fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-white/10 bg-[#080808] transition-transform duration-300 ${
-          mobileMenu ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0`}
-      >
+      <aside className="fixed left-0 top-0 flex h-screen w-72 flex-col border-r border-white/10 bg-[#0b0c12]">
 
         {/* Logo */}
-        <div className="flex h-20 items-center border-b border-white/10 px-7">
-          <div className="text-2xl font-bold tracking-tight">
-            Style<span className="text-purple-500">AI</span>
-          </div>
+        <div className="flex h-[85px] items-center border-b border-white/10 px-8">
+          <button
+            onClick={() => navigate("/")}
+            className="text-2xl font-bold tracking-tight"
+          >
+            <span className="text-white">Style</span>
+
+            <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-emerald-300 bg-clip-text text-transparent">
+              AI
+            </span>
+          </button>
         </div>
+
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto px-4 py-7">
+        <div className="flex-1 px-4 py-7">
 
-          <p className="mb-4 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-600">
-            Workspace
+          <p className="mb-4 px-3 text-[11px] font-semibold tracking-[0.2em] text-gray-600">
+            WORKSPACE
           </p>
 
-          <nav className="space-y-1">
+          <div className="space-y-2">
 
-            {menuItems.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => {
-                  setActiveMenu(item.name);
-                  setMobileMenu(false);
-                }}
-                className={`flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-left text-sm transition-all ${
-                  activeMenu === item.name
-                    ? "bg-purple-500/15 text-purple-400 shadow-sm shadow-purple-900/20"
-                    : "text-gray-400 hover:bg-white/[0.04] hover:text-white"
-                }`}
-              >
-                <span
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg text-lg ${
-                    activeMenu === item.name
-                      ? "bg-purple-500/10"
-                      : "bg-transparent"
-                  }`}
-                >
-                  {item.icon}
-                </span>
+            <SidebarItem
+              icon="⌂"
+              text="Dashboard"
+              active={true}
+              onClick={() => navigate("/dashboard")}
+            />
 
-                <span>{item.name}</span>
-              </button>
-            ))}
+            <SidebarItem
+              icon="✦"
+              text="AI Stylist"
+              onClick={() => navigate("/ai-stylist")}
+            />
 
-          </nav>
+            <SidebarItem
+              icon="♡"
+              text="My Style"
+            />
 
-          <p className="mb-4 mt-10 px-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-600">
-            Account
-          </p>
-
-          <button className="flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-sm text-gray-400 transition hover:bg-white/[0.04] hover:text-white">
-            <span className="flex h-8 w-8 items-center justify-center text-lg">
-              ⚙
-            </span>
-            Settings
-          </button>
-
-          <button className="mt-1 flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-sm text-gray-400 transition hover:bg-white/[0.04] hover:text-white">
-            <span className="flex h-8 w-8 items-center justify-center text-lg">
-              ↪
-            </span>
-            Logout
-          </button>
-
-        </div>
-
-        {/* Sidebar Bottom */}
-        <div className="border-t border-white/10 p-4">
-
-          <div className="rounded-xl border border-purple-500/10 bg-purple-500/[0.05] p-4">
-
-            <p className="text-xs font-medium text-purple-300">
-              StyleAI Premium
-            </p>
-
-            <p className="mt-1 text-[11px] leading-5 text-gray-500">
-              Unlock more personalized style recommendations.
-            </p>
-
-            <button className="mt-3 text-xs font-medium text-purple-400 hover:text-purple-300">
-              Explore →
-            </button>
+            <SidebarItem
+              icon="◈"
+              text="Recommendations"
+            />
 
           </div>
+
+
+          {/* Account */}
+          <p className="mb-4 mt-10 px-3 text-[11px] font-semibold tracking-[0.2em] text-gray-600">
+            ACCOUNT
+          </p>
+
+          <SidebarItem
+            icon="⚙"
+            text="Settings"
+          />
+
+          <button
+            onClick={handleLogout}
+            className="mt-2 flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-left text-gray-400 transition hover:bg-red-500/5 hover:text-red-400"
+          >
+            <span className="flex h-7 w-7 items-center justify-center text-lg">
+              ↪
+            </span>
+
+            <span className="text-sm font-medium">
+              Logout
+            </span>
+          </button>
 
         </div>
 
       </aside>
 
 
-      {/* ================= MAIN AREA ================= */}
+      {/* ================= MAIN CONTENT ================= */}
+      <div className="ml-72 flex-1">
 
-      <div className="h-screen lg:pl-64">
+        {/* HEADER */}
+        <header className="flex h-[85px] items-center justify-between border-b border-white/10 px-10">
 
-        {/* ================= TOP NAVBAR ================= */}
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-400">
+              PERSONAL STYLE DASHBOARD
+            </p>
 
-        <header className="fixed left-0 right-0 top-0 z-30 h-20 border-b border-white/10 bg-black/90 backdrop-blur-xl lg:left-64">
+            <h1 className="mt-1 text-xl font-semibold">
+              Dashboard
+            </h1>
+          </div>
 
-          <div className="flex h-full items-center justify-between px-5 lg:px-8">
 
-            {/* Mobile Menu */}
-            <button
-              onClick={() => setMobileMenu(true)}
-              className="mr-4 flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-gray-300 lg:hidden"
-            >
-              ☰
-            </button>
+          {/* User */}
+          <div className="flex items-center gap-3">
 
-            {/* Search */}
-            <div className="hidden w-full max-w-md md:block">
+            <div className="hidden text-right sm:block">
+              <p className="text-sm font-medium text-white">
+                {user?.name || "Style User"}
+              </p>
 
-              <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2.5">
-
-                <span className="text-gray-500">
-                  ⌕
-                </span>
-
-                <input
-                  type="text"
-                  placeholder="Search your style..."
-                  className="w-full bg-transparent text-sm text-white outline-none placeholder:text-gray-600"
-                />
-
-                <span className="rounded-md border border-white/10 px-2 py-1 text-[10px] text-gray-600">
-                  /
-                </span>
-
-              </div>
-
+              <p className="text-xs text-gray-500">
+                Style AI Member
+              </p>
             </div>
 
-            {/* Right Side */}
-            <div className="ml-auto flex items-center gap-4">
-
-              {/* Notification */}
-              <button className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-gray-400 transition hover:bg-white/[0.05] hover:text-white">
-                ♢
-
-                <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-purple-500" />
-              </button>
-
-              {/* Divider */}
-              <div className="hidden h-8 w-px bg-white/10 sm:block" />
-
-              {/* Profile */}
-              <button className="flex items-center gap-3">
-
-                <div className="hidden text-right sm:block">
-
-                  <p className="text-sm font-semibold">
-                    Aavani
-                  </p>
-
-                  <p className="text-[11px] text-gray-500">
-                    Style Explorer
-                  </p>
-
-                </div>
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-700 font-semibold shadow-lg shadow-purple-900/20">
-                  A
-                </div>
-
-                <span className="hidden text-xs text-gray-500 sm:block">
-                  ▾
-                </span>
-
-              </button>
-
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 via-blue-500 to-emerald-400 font-semibold text-white">
+              {(user?.name || "S").charAt(0).toUpperCase()}
             </div>
 
           </div>
@@ -206,455 +133,250 @@ function Dashboard() {
         </header>
 
 
-        {/* ================= SCROLLABLE CONTENT ================= */}
+        {/* MAIN */}
+        <main className="mx-auto max-w-7xl p-10">
 
-        <main className="h-screen overflow-y-auto pt-20">
 
-          <div className="mx-auto max-w-[1500px] px-5 py-8 sm:px-7 lg:px-10">
+          {/* ================= WELCOME ================= */}
+          <section className="mb-10">
 
-            {/* ================= WELCOME ================= */}
+            <p className="text-sm font-medium text-gray-500">
+              WELCOME BACK
+            </p>
 
-            <section className="mb-8">
+            <h2 className="mt-3 text-4xl font-bold leading-tight">
 
-              <p className="mb-2 text-sm font-medium text-purple-400">
-                YOUR PERSONAL STYLE SPACE
+              Hey {user?.name || "there"}, let's
+
+              <span className="bg-gradient-to-r from-purple-400 via-blue-400 to-emerald-300 bg-clip-text text-transparent">
+                {" "}style your day.
+              </span>
+
+            </h2>
+
+            <p className="mt-4 max-w-2xl leading-7 text-gray-400">
+              Explore personalized recommendations, discover new outfit ideas
+              and build a style that feels completely like you.
+            </p>
+
+          </section>
+
+
+          {/* ================= MAIN ACTION CARD ================= */}
+          <section className="relative overflow-hidden rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-950/30 via-[#11121a] to-[#0c1118] p-8 md:p-10">
+
+            {/* Decorative glow */}
+            <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-purple-500/10 blur-3xl" />
+
+            <div className="relative z-10 max-w-2xl">
+
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-blue-500 to-emerald-400 text-2xl">
+                ✦
+              </div>
+
+              <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-purple-300">
+                AI POWERED STYLING
               </p>
 
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                Good to see you, Aavani
-                <span className="ml-2">👋</span>
-              </h1>
+              <h2 className="mt-3 text-3xl font-bold">
+                Not sure what to wear?
+              </h2>
 
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-gray-500 sm:text-base">
-                Discover new looks, explore your personal style and get
-                AI-powered fashion recommendations made just for you.
+              <p className="mt-4 max-w-xl leading-7 text-gray-400">
+                Tell Style AI where you're going and what kind of look you want.
+                We'll create a personalized style recommendation for you.
               </p>
 
-            </section>
+              <button
+                onClick={() => navigate("/ai-stylist")}
+                className="mt-7 rounded-xl bg-gradient-to-r from-purple-600 via-blue-500 to-emerald-500 px-7 py-3.5 font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/20"
+              >
+                Start Styling with AI →
+              </button>
+
+            </div>
+
+          </section>
 
 
-            {/* ================= AI HERO ================= */}
+          {/* ================= QUICK STATS ================= */}
+          <section className="mt-10">
 
-            <section className="relative mb-7 overflow-hidden rounded-3xl border border-purple-500/20 bg-gradient-to-br from-[#18002c] via-[#100018] to-[#080808]">
+            <div className="mb-6 flex items-center justify-between">
 
-              {/* Glow */}
-              <div className="absolute -right-32 -top-32 h-80 w-80 rounded-full bg-purple-600/20 blur-3xl" />
-
-              <div className="absolute -bottom-32 left-1/3 h-72 w-72 rounded-full bg-fuchsia-600/10 blur-3xl" />
-
-              <div className="relative z-10 p-7 sm:p-9 lg:p-10">
-
-                <div className="max-w-3xl">
-
-                  <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-purple-400/20 bg-purple-500/10 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-purple-300">
-                    <span>✦</span>
-                    AI STYLE ASSISTANT
-                  </div>
-
-                  <h2 className="text-2xl font-bold leading-tight sm:text-3xl">
-                    Your personal AI stylist
-                    <br className="hidden sm:block" />
-                    is ready.
-                  </h2>
-
-                  <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-400">
-                    Tell StyleAI what you're looking for and get personalized
-                    outfit ideas, styling tips and recommendations based on
-                    your unique preferences.
-                  </p>
-
-                  <div className="mt-6 flex flex-wrap gap-3">
-
-                    <button
-                      onClick={() => setActiveMenu("AI Stylist")}
-                      className="rounded-xl bg-purple-600 px-5 py-3 text-sm font-semibold transition hover:bg-purple-700 hover:shadow-lg hover:shadow-purple-900/30"
-                    >
-                      Start Styling →
-                    </button>
-
-                    <button
-                      className="rounded-xl border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-medium text-gray-300 transition hover:bg-white/[0.07] hover:text-white"
-                    >
-                      Explore Looks
-                    </button>
-
-                  </div>
-
-                </div>
-
-              </div>
-
-            </section>
-
-
-            {/* ================= STATS ================= */}
-
-            <section className="mb-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
-              {/* Style Score */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-gray-600">
-                      Style Score
-                    </p>
-
-                    <p className="mt-3 text-3xl font-bold">
-                      82
-                    </p>
-                  </div>
-
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-500/10 text-purple-400">
-                    ✦
-                  </div>
-
-                </div>
-
-                <div className="mt-4 flex items-center justify-between text-xs">
-
-                  <span className="text-gray-500">
-                    Your current score
-                  </span>
-
-                  <span className="text-green-400">
-                    +8%
-                  </span>
-
-                </div>
-
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
-                  <div className="h-full w-[82%] rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-500" />
-                </div>
-
-              </div>
-
-
-              {/* Saved Looks */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-gray-600">
-                      Looks Saved
-                    </p>
-
-                    <p className="mt-3 text-3xl font-bold">
-                      12
-                    </p>
-                  </div>
-
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pink-500/10 text-pink-400">
-                    ♡
-                  </div>
-
-                </div>
-
-                <p className="mt-4 text-xs text-gray-500">
-                  Your favorite looks
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-600">
+                  YOUR STYLE JOURNEY
                 </p>
 
+                <h3 className="mt-2 text-xl font-semibold">
+                  Overview
+                </h3>
               </div>
 
-
-              {/* Recommendations */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-gray-600">
-                      AI Recommendations
-                    </p>
-
-                    <p className="mt-3 text-3xl font-bold">
-                      24
-                    </p>
-                  </div>
-
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
-                    ✧
-                  </div>
-
-                </div>
-
-                <p className="mt-4 text-xs text-gray-500">
-                  Personalized for you
-                </p>
-
-              </div>
+            </div>
 
 
-              {/* Style Level */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-5">
+            <div className="grid gap-5 md:grid-cols-3">
 
-                <div className="flex items-start justify-between">
+              <StatCard
+                icon="✦"
+                label="Style Analyses"
+                value="0"
+                color="purple"
+              />
 
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wider text-gray-600">
-                      Style Level
-                    </p>
+              <StatCard
+                icon="♡"
+                label="Saved Looks"
+                value="0"
+                color="blue"
+              />
 
-                    <p className="mt-3 text-2xl font-bold">
-                      Explorer
-                    </p>
-                  </div>
+              <StatCard
+                icon="◈"
+                label="Recommendations"
+                value="0"
+                color="mint"
+              />
 
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10 text-orange-400">
-                    ★
-                  </div>
+            </div>
 
-                </div>
-
-                <p className="mt-4 text-xs text-purple-400">
-                  Keep discovering
-                </p>
-
-              </div>
-
-            </section>
+          </section>
 
 
-            {/* ================= TWO COLUMN ================= */}
-
-            <section className="grid gap-6 xl:grid-cols-3">
-
-              {/* Your Style */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 xl:col-span-2">
-
-                <div className="flex items-start justify-between">
-
-                  <div>
-                    <h2 className="text-lg font-semibold">
-                      Your Style
-                    </h2>
-
-                    <p className="mt-1 text-sm text-gray-600">
-                      Your current style preferences
-                    </p>
-                  </div>
-
-                  <button className="text-sm font-medium text-purple-400 hover:text-purple-300">
-                    Edit
-                  </button>
-
-                </div>
-
-                <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-
-                  {[
-                    ["👕", "Casual"],
-                    ["🧥", "Streetwear"],
-                    ["👔", "Formal"],
-                    ["👟", "Minimal"],
-                  ].map(([icon, name]) => (
-                    <button
-                      key={name}
-                      className="rounded-xl border border-white/10 bg-black p-5 text-center transition hover:border-purple-500/30 hover:bg-purple-500/[0.03]"
-                    >
-                      <div className="text-3xl">
-                        {icon}
-                      </div>
-
-                      <p className="mt-3 text-sm font-medium">
-                        {name}
-                      </p>
-
-                      <p className="mt-1 text-[10px] text-gray-600">
-                        Preferred
-                      </p>
-                    </button>
-                  ))}
-
-                </div>
-
-              </div>
+          {/* ================= BOTTOM GRID ================= */}
+          <section className="mt-10 grid gap-6 lg:grid-cols-2">
 
 
-              {/* Quick Actions */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-6">
+            {/* RECENT ACTIVITY */}
+            <div className="rounded-3xl border border-white/10 bg-[#0c0d12] p-7">
 
-                <h2 className="text-lg font-semibold">
-                  Quick Actions
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-600">
-                  Start creating your next look
-                </p>
-
-                <button
-                  onClick={() => setActiveMenu("AI Stylist")}
-                  className="mt-6 flex w-full items-center gap-4 rounded-xl border border-purple-500/20 bg-purple-500/[0.08] p-4 text-left transition hover:bg-purple-500/[0.13]"
-                >
-
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-lg">
-                    ✦
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold">
-                      Ask AI Stylist
-                    </p>
-
-                    <p className="mt-1 text-xs text-gray-600">
-                      Get instant style advice
-                    </p>
-                  </div>
-
-                </button>
-
-
-                <button className="mt-3 flex w-full items-center gap-4 rounded-xl border border-white/10 bg-black p-4 text-left transition hover:border-white/20">
-
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/[0.04] text-lg">
-                    📸
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold">
-                      Analyze Outfit
-                    </p>
-
-                    <p className="mt-1 text-xs text-gray-600">
-                      Upload a look for analysis
-                    </p>
-                  </div>
-
-                </button>
-
-              </div>
-
-            </section>
-
-
-            {/* ================= RECOMMENDATIONS ================= */}
-
-            <section className="mt-6 rounded-2xl border border-white/10 bg-white/[0.025] p-6">
-
-              <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center justify-between">
 
                 <div>
-                  <h2 className="text-lg font-semibold">
-                    Recommended For You
-                  </h2>
-
-                  <p className="mt-1 text-sm text-gray-600">
-                    AI-curated ideas based on your style
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-600">
+                    ACTIVITY
                   </p>
+
+                  <h3 className="mt-2 text-lg font-semibold">
+                    Recent Style Activity
+                  </h3>
                 </div>
 
+                <span className="text-lg text-purple-400">
+                  ↗
+                </span>
+
+              </div>
+
+
+              <div className="mt-8 flex flex-col items-center justify-center py-8 text-center">
+
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/10 text-3xl">
+                  ✦
+                </div>
+
+                <h4 className="mt-5 font-medium">
+                  Your style journey starts here
+                </h4>
+
+                <p className="mt-2 max-w-xs text-sm leading-6 text-gray-500">
+                  Use the AI Stylist to create your first personalized outfit recommendation.
+                </p>
+
                 <button
-                  onClick={() => setActiveMenu("Recommendations")}
-                  className="text-sm font-medium text-purple-400 hover:text-purple-300"
+                  onClick={() => navigate("/ai-stylist")}
+                  className="mt-5 text-sm font-medium text-purple-400 transition hover:text-purple-300"
                 >
-                  View All →
+                  Try AI Stylist →
                 </button>
 
               </div>
 
-
-              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-
-                {/* Look 1 */}
-                <div className="group overflow-hidden rounded-xl border border-white/10 bg-black transition hover:-translate-y-1 hover:border-purple-500/30">
-
-                  <div className="flex h-44 items-center justify-center bg-gradient-to-br from-purple-950/50 via-gray-900 to-black text-7xl transition group-hover:scale-[1.02]">
-                    👕
-                  </div>
-
-                  <div className="p-5">
-
-                    <div className="flex items-center justify-between">
-
-                      <h3 className="font-semibold">
-                        Everyday Casual
-                      </h3>
-
-                      <span className="text-xs text-purple-400">
-                        94%
-                      </span>
-
-                    </div>
-
-                    <p className="mt-2 text-xs leading-5 text-gray-600">
-                      Comfortable pieces styled for your everyday look.
-                    </p>
-
-                  </div>
-
-                </div>
+            </div>
 
 
-                {/* Look 2 */}
-                <div className="group overflow-hidden rounded-xl border border-white/10 bg-black transition hover:-translate-y-1 hover:border-purple-500/30">
+            {/* STYLE PROFILE */}
+            <div className="rounded-3xl border border-white/10 bg-[#0c0d12] p-7">
 
-                  <div className="flex h-44 items-center justify-center bg-gradient-to-br from-fuchsia-950/40 via-gray-900 to-black text-7xl transition group-hover:scale-[1.02]">
-                    🧥
-                  </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-600">
+                STYLE PROFILE
+              </p>
 
-                  <div className="p-5">
-
-                    <div className="flex items-center justify-between">
-
-                      <h3 className="font-semibold">
-                        Urban Street
-                      </h3>
-
-                      <span className="text-xs text-purple-400">
-                        91%
-                      </span>
-
-                    </div>
-
-                    <p className="mt-2 text-xs leading-5 text-gray-600">
-                      A modern streetwear combination matched to your style.
-                    </p>
-
-                  </div>
-
-                </div>
+              <h3 className="mt-2 text-lg font-semibold">
+                Your Personal Style
+              </h3>
 
 
-                {/* Look 3 */}
-                <div className="group overflow-hidden rounded-xl border border-white/10 bg-black transition hover:-translate-y-1 hover:border-purple-500/30">
+              <div className="mt-7 space-y-5">
 
-                  <div className="flex h-44 items-center justify-center bg-gradient-to-br from-violet-950/40 via-gray-900 to-black text-7xl transition group-hover:scale-[1.02]">
-                    👔
-                  </div>
+                <ProfileItem
+                  label="Favorite Style"
+                  value="Not selected yet"
+                />
 
-                  <div className="p-5">
+                <ProfileItem
+                  label="Preferred Occasion"
+                  value="Not selected yet"
+                />
 
-                    <div className="flex items-center justify-between">
-
-                      <h3 className="font-semibold">
-                        Smart Formal
-                      </h3>
-
-                      <span className="text-xs text-purple-400">
-                        88%
-                      </span>
-
-                    </div>
-
-                    <p className="mt-2 text-xs leading-5 text-gray-600">
-                      A clean and polished look for important occasions.
-                    </p>
-
-                  </div>
-
-                </div>
+                <ProfileItem
+                  label="Style Confidence"
+                  value="Getting started"
+                />
 
               </div>
 
-            </section>
+
+              <button
+                onClick={() => navigate("/ai-stylist")}
+                className="mt-8 w-full rounded-xl border border-white/10 py-3 text-sm font-medium text-gray-400 transition hover:border-purple-500/40 hover:text-white"
+              >
+                Build Your Style Profile
+              </button>
+
+            </div>
+
+          </section>
 
 
-            {/* Bottom spacing */}
-            <div className="h-10" />
+          {/* ================= EXPLORE ================= */}
+          <section className="mt-10">
 
-          </div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-600">
+              EXPLORE STYLE AI
+            </p>
+
+            <h3 className="mt-2 text-xl font-semibold">
+              What would you like to do?
+            </h3>
+
+
+            <div className="mt-6 grid gap-5 md:grid-cols-3">
+
+              <ActionCard
+                icon="✦"
+                title="AI Stylist"
+                text="Get a personalized outfit recommendation."
+                onClick={() => navigate("/ai-stylist")}
+              />
+
+              <ActionCard
+                icon="♡"
+                title="My Style"
+                text="Build your personal style profile."
+              />
+
+              <ActionCard
+                icon="◈"
+                title="Recommendations"
+                text="Explore your saved style ideas."
+              />
+
+            </div>
+
+          </section>
 
         </main>
 
@@ -663,5 +385,111 @@ function Dashboard() {
     </div>
   );
 }
+
+
+/* ================= SIDEBAR ITEM ================= */
+
+function SidebarItem({ icon, text, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-left transition ${
+        active
+          ? "bg-gradient-to-r from-purple-500/20 via-blue-500/10 to-emerald-400/5 text-purple-300"
+          : "text-gray-400 hover:bg-white/[0.04] hover:text-white"
+      }`}
+    >
+      <span className="flex h-7 w-7 items-center justify-center text-lg">
+        {icon}
+      </span>
+
+      <span className="text-sm font-medium">
+        {text}
+      </span>
+    </button>
+  );
+}
+
+
+/* ================= STAT CARD ================= */
+
+function StatCard({ icon, label, value, color }) {
+
+  const colors = {
+    purple: "bg-purple-500/10 text-purple-400 border-purple-500/10",
+    blue: "bg-blue-500/10 text-blue-400 border-blue-500/10",
+    mint: "bg-emerald-400/10 text-emerald-300 border-emerald-400/10",
+  };
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-[#0c0d12] p-6">
+
+      <div className={`flex h-12 w-12 items-center justify-center rounded-xl border ${colors[color]}`}>
+        <span className="text-xl">
+          {icon}
+        </span>
+      </div>
+
+      <p className="mt-5 text-3xl font-bold">
+        {value}
+      </p>
+
+      <p className="mt-2 text-sm text-gray-500">
+        {label}
+      </p>
+
+    </div>
+  );
+}
+
+
+/* ================= PROFILE ITEM ================= */
+
+function ProfileItem({ label, value }) {
+  return (
+    <div className="flex items-center justify-between border-b border-white/5 pb-4">
+
+      <span className="text-sm text-gray-500">
+        {label}
+      </span>
+
+      <span className="text-sm text-gray-300">
+        {value}
+      </span>
+
+    </div>
+  );
+}
+
+
+/* ================= ACTION CARD ================= */
+
+function ActionCard({ icon, title, text, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="group rounded-2xl border border-white/10 bg-[#0c0d12] p-6 text-left transition duration-300 hover:-translate-y-1 hover:border-purple-500/30 hover:bg-white/[0.035]"
+    >
+
+      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500/15 via-blue-500/10 to-emerald-400/10 text-xl text-purple-300">
+        {icon}
+      </div>
+
+      <h4 className="mt-5 font-semibold text-white">
+        {title}
+      </h4>
+
+      <p className="mt-2 text-sm leading-6 text-gray-500">
+        {text}
+      </p>
+
+      <span className="mt-5 inline-block text-sm text-purple-400 transition group-hover:translate-x-1">
+        Explore →
+      </span>
+
+    </button>
+  );
+}
+
 
 export default Dashboard;
